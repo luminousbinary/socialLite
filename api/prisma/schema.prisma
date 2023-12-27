@@ -1,0 +1,94 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id                 String          @id @default(uuid())
+  firstName          String?
+  lastName           String?
+  email              String          @unique
+  password           String
+  imagePath          String?         @default("default.png")
+  role               Role?           @default(user)
+  posts              FeedPost[]
+  sentFriendRequests FriendRequest[] @relation("sentFriendRequests")
+
+  receivedFriendRequests FriendRequest[] @relation("receivedFriendRequests")
+
+  chats Chat[]
+
+  messages Message[]
+}
+
+model FeedPost {
+  id        String   @id @default(uuid())
+  createdAt DateTime @default(now())
+  body      String?  @default("")
+  author    User?    @relation(fields: [authorId], references: [id])
+  authorId  String?
+}
+
+model FriendRequest {
+  id String @id @default(uuid())
+
+  sentFriendRequest       User?   @relation("sentFriendRequests", fields: [sentFriendRequestId], references: [id])
+  sentFriendRequestId     String?
+  receivedFriendRequest   User?   @relation("receivedFriendRequests", fields: [receivedFriendRequestId], references: [id])
+  receivedFriendRequestId String?
+
+  status FriendRequest_Status? @default(not_sent)
+}
+
+model Chat {
+  id     String  @id @default(uuid())
+  User   User?   @relation(fields: [userId], references: [id])
+  userId String?
+
+  messages Message[]
+
+  lastActive DateTime @updatedAt
+}
+
+model ActiveChat {
+  id String @id @default(uuid())
+
+  socketId String
+
+  userId String
+
+  conversationId String
+}
+
+model Message {
+  id        String   @id @default(uuid())
+  createdAt DateTime @default(now())
+
+  message String
+
+  User   User?   @relation(fields: [userId], references: [id])
+  userId String?
+  Chat   Chat?   @relation(fields: [chatId], references: [id])
+  chatId String?
+}
+
+enum Role {
+  admin
+  user
+  premuim
+}
+
+enum FriendRequest_Status {
+  not_sent
+  pending
+  ccepted
+  eclined
+  waiting_for_current_user_response
+}
