@@ -13,3 +13,35 @@ export class LoginDto {
   password: string;
 }
 
+
+
+export class SignUpDto {
+    @ApiProperty()
+    @IsString()
+    firstName: string;
+  
+    @ApiProperty()
+    @IsString()
+    lastName: string;
+  
+    @ApiProperty()
+    @IsNotEmpty()
+    @IsEmail()
+    email: string;
+  
+    @ApiProperty()
+    @IsOptional()
+    @IsString()
+    userName: string;
+    
+    @ApiProperty()
+    @IsNotEmpty()
+    @IsString()
+    userHandle: string;
+  
+    @ApiProperty()
+    @IsNotEmpty()
+    @IsString()
+    password: string
+  }
+  
