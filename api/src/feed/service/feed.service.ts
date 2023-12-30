@@ -1,16 +1,14 @@
-import { Injectable, UseGuards } from '@nestjs/common';
-import { FeedPost, User } from '@prisma/client';
+import { Injectable } from '@nestjs/common';
+import {  User } from '@prisma/client';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { CreatePostDto } from '../dto/feed.dto';
 import { Observable, from } from 'rxjs';
-import { JwtGuard } from 'src/auth/guards/jwt.guard';
 
-@UseGuards(JwtGuard)
 @Injectable()
 export class FeedService {
     constructor(private prisma: PrismaService) { }
 
-    async createPost(dto: CreatePostDto) {
+    async createPost(user:User, dto: CreatePostDto) {
 
         console.log(dto);
 
@@ -18,7 +16,7 @@ export class FeedService {
         return this.prisma.feedPost.create({
             data: {
                 ...dto,
-                // authorId: "122"
+                authorId: user.id
             }
         })
 
@@ -53,11 +51,12 @@ export class FeedService {
 
     }
 
-    async updatePost(postId: string, dto: CreatePostDto) {
+    async updatePost(user:User, postId: string, dto: CreatePostDto) {
 
         const post = await this.prisma.feedPost.updateMany({
             where: {
                 id: postId,
+                author: user
 
             },
             data: {
@@ -68,11 +67,12 @@ export class FeedService {
         return post
     }
 
-    async deletePost(postId: string, dto: CreatePostDto) {
+    async deletePost(user:User, postId: string) {
 
         return await this.prisma.feedPost.deleteMany({
             where: {
                 id: postId,
+                author: user
             }
         })
 
