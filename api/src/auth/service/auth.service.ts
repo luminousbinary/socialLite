@@ -36,7 +36,7 @@ export class AuthService {
             delete user.password
             //return new saved user to db
             // return user
-            return this.signToken(Number(user.id), user.email);
+            return this.signToken(user.id, user.email);
         } catch (error) {
             if (error instanceof Prisma.PrismaClientKnownRequestError) {
                 if (error.code === "P2002") {
@@ -66,12 +66,12 @@ export class AuthService {
         delete user.password
 
         // // send back user
-        return  this.signToken(Number(user.id), user.email);
+        return  this.signToken(user.id, user.email);
     }
 
 
     async signToken(
-        userId: number,
+        userId: string,
         email: string
     ): Promise<{ access_token: string }> {
         const payload = {

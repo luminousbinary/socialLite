@@ -4,6 +4,7 @@ import { AuthController } from 'src/auth/controller/auth.controller';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { JwtModule } from '@nestjs/jwt';
 import { JwtStrategy } from './strategy/jwt.strategy';
+import { RolesGuard } from './guards/roles.guard';
 
 @Module({
   imports: [JwtModule.registerAsync({
@@ -13,7 +14,7 @@ import { JwtStrategy } from './strategy/jwt.strategy';
       signOptions: { expiresIn: '3600s' }
     }),
   })],
-  providers: [AuthService, PrismaService, JwtStrategy],
+  providers: [AuthService, PrismaService, JwtStrategy, RolesGuard],
   controllers: [AuthController]
 })
 export class AuthModule { }

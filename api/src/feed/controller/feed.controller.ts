@@ -2,8 +2,10 @@ import { Body, Request, Controller, Post, Patch, Delete, Get, Param, Query, UseG
 import { FeedService } from '../service/feed.service';
 import { CreatePostDto } from '../dto/feed.dto';
 import { Observable, from } from 'rxjs';
-import { FeedPost } from '@prisma/client';
+import { FeedPost, Role } from '@prisma/client';
 import { JwtGuard } from 'src/auth/guards/jwt.guard';
+import { Roles } from 'src/auth/decorator/roles.decorator';
+import { RolesGuard } from 'src/auth/guards/roles.guard';
 
 @Controller('feed')
 export class FeedController {
@@ -20,7 +22,9 @@ export class FeedController {
         return this.feedService.findPosts(take, skip)
     }
 
-    @UseGuards(JwtGuard)
+    
+    @Roles(Role.admin)
+    @UseGuards(JwtGuard, RolesGuard)
     @Post()
     create(@Body() dto: CreatePostDto, @Request() req): Observable<FeedPost> {
         return from(this.feedService.createPost(req.user, dto));
