@@ -66,7 +66,7 @@ export class AuthService {
         delete user.password
 
         // // send back user
-        return  this.signToken(user.id, user.email);
+        return this.signToken(user.id, user.email);
     }
 
 
@@ -86,6 +86,17 @@ export class AuthService {
         return {
             access_token: token,
         };
-     }
+    }
+
+    async findUserById(id: string): Promise<User>  {
+
+        const user = await this.prisma.user.findUnique({
+            where: { id },
+            include: { posts: true }
+        })
+        // delete (await user).password
+        delete user.password
+        return user
+    }
 }
 

@@ -6,6 +6,7 @@ import { FeedPost, Role } from '@prisma/client';
 import { JwtGuard } from 'src/auth/guards/jwt.guard';
 import { Roles } from 'src/auth/decorator/roles.decorator';
 import { RolesGuard } from 'src/auth/guards/roles.guard';
+import { ContentCreatorGuard } from '../guards/content-creator.guard';
 
 @Controller('feed')
 export class FeedController {
@@ -30,8 +31,7 @@ export class FeedController {
         return from(this.feedService.createPost(req.user, dto));
     }
 
-
-    @UseGuards(JwtGuard)
+    @UseGuards(JwtGuard, ContentCreatorGuard) // content creator guard is now working at this moment but only content owner have access to delete or edit their content
     @Patch(':id')
     update(@Param('id') id: string,
         @Body() dto: CreatePostDto,
@@ -40,7 +40,7 @@ export class FeedController {
     }
 
 
-    @UseGuards(JwtGuard)
+    @UseGuards(JwtGuard, ContentCreatorGuard)// content creator guard is now working at this moment but only content owner have access to delete or edait their content
     @Delete(':id')
     delete(
         @Param('id') id: string,
