@@ -87,16 +87,26 @@ export class AuthService {
             access_token: token,
         };
     }
-
-    async findUserById(id: string): Promise<User>  {
-
-        const user = await this.prisma.user.findUnique({
-            where: { id },
-            include: { posts: true }
-        })
-        // delete (await user).password
-        delete user.password
-        return user
-    }
+    // {mnode express view?¿ laravel//n microservices/ node balances/}
+    // micro.
+    // message broker  rabit mk 
+    //  // an app devided into series of moduls... then the two module needs to communicate... the modules can be for orders, it can be for auth, 
+    // // // after the modules auth is done... it will gen a token...
+    // // // its gor different modules can communicatyet ...
+    // larg engh for a robust load balancing not wighin donwn  performance.
+    // // ee... streaming.
+    //
+    // cheap localname host domain 
+    // 
+    // understand the basics architecture of node
+    // namecheap... 
+    //digitalocean...    
+    // coninuous dev
+//  // dev server, production 
+    // github action runner // 
+    // pieline set-up... contibuious deploiyment 
+    // 12 - 16 gb,  
+    // 
+    // cv and shot descupir
 }
 

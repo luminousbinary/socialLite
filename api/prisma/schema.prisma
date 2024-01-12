@@ -6,7 +6,8 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
+  provider = "mysql"
+  // provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 
@@ -18,7 +19,7 @@ model User {
   // userHandle         String          @unique
   email              String          @unique
   password           String
-  imagePath          String?         @default("default.png")
+  imagePath          String?         @default("")
   role               Role?           @default(user)
   posts              FeedPost[]
   sentFriendRequests FriendRequest[] @relation("sentFriendRequests")

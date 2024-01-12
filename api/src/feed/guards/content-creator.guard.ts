@@ -9,9 +9,9 @@ import { PrismaService } from 'src/prisma/prisma.service';
 export class ContentCreatorGuard implements CanActivate {
   constructor(private prismaService: PrismaService) { }
 
-  canActivate(
+  async canActivate (
     context: ExecutionContext,
-  ): boolean | Promise<boolean> | Observable<boolean> {
+  ) {
 
     const request = context.switchToHttp().getRequest()
 
@@ -19,33 +19,53 @@ export class ContentCreatorGuard implements CanActivate {
 
     if (!user || !params) return false; // if no user or no post id exist then access cannot happen
 
-    console.log(user.role, " this is rile ");
+    // console.log(user.role, " this is rile ");
     if (user.role === 'admin') return true // if user is an admin then admin can have access if he needs to
 
     
     const userid = user.id
-    const feedId = params.id
+    const feedid = params.id
+  // console.log(userid, feedid, " this is author and feed if ");
     
 
   // return 
   
-  // let isCreator 
-  const isAuthor = this.prismaService.feedPost.findUnique({
-    where: {id:feedId,
-    authorId: userid}
+  // // let isCreator 
+  // const isAuthor = await this.creatorExist(userid, feedid)
+  // // console.log(isAuthor, " this is author ");
+
+  // if( isAuthor) return true
+  // // console.log(isAuthor, " this is  not author ooo ");
+  const isCreators = await this.prismaService.feedPost.findUnique({
+    where:{
+      id: feedid,
+      authorId:userid        
+    }
+
   })
 
-  console.log(isAuthor, " this is author ");
-
-  if(isAuthor) return true
+  if (isCreators) return true
 
   return false
-    // UKM - wirk and have money and exp. 
-    // 
-    // 
-    // 23:25:31:35
+  
+  return false
 
+  }
 
+  async creatorExist (user:string, postId:string)  {
+
+    const isCreators = await this.prismaService.feedPost.findUnique({
+      where:{
+        id: postId,
+        authorId:user        
+      }
+
+    })
+
+    if (isCreators) return true
+
+    return false
+    
   }
 }
 // async function isCreator(userid:string, feedId: string) {

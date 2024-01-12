@@ -56,7 +56,7 @@ export class FeedService {
         const post = await this.prisma.feedPost.updateMany({
             where: {
                 id: postId,
-                author: user
+                // author: user
 
             },
             data: {
@@ -72,7 +72,7 @@ export class FeedService {
         return await this.prisma.feedPost.deleteMany({
             where: {
                 id: postId,
-                author: user
+                // author: user
             }
         })
 

@@ -24,7 +24,7 @@ export class FeedController {
     }
 
     
-    @Roles(Role.admin)
+    @Roles(Role.admin, Role.user)
     @UseGuards(JwtGuard, RolesGuard)
     @Post()
     create(@Body() dto: CreatePostDto, @Request() req): Observable<FeedPost> {
