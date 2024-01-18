@@ -6,6 +6,7 @@ import { JwtModule } from '@nestjs/jwt';
 import { JwtStrategy } from './strategy/jwt.strategy';
 import { RolesGuard } from './guards/roles.guard';
 import { UserService } from './service/user.service';
+import { UserController } from './controller/user.controller';
 
 @Module({
   imports: [JwtModule.registerAsync({
@@ -16,7 +17,7 @@ import { UserService } from './service/user.service';
     }),
   })],
   providers: [AuthService, PrismaService, JwtStrategy, RolesGuard, UserService],
-  controllers: [AuthController],
+  controllers: [AuthController, UserController],
   exports:[AuthService, UserService]
 })
 export class AuthModule { }

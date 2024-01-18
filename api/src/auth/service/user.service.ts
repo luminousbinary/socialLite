@@ -17,6 +17,26 @@ export class UserService {
         delete user.password
         return user
     }
+
+    async updateUserImageById(id: string, imagePath: object){
+        const user = await this.prismaService.user.update({
+            where: {id},
+            data:{
+                imagePath
+            } 
+
+        })
+        return user
+    }
+
+    async getUserImageById(id: string){
+        const user = await this.prismaService.user.findUnique({
+            where: {id},
+        })
+
+        delete user.password
+        return user.imagePath
+    }
     
 
 }

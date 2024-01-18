@@ -19,23 +19,11 @@ export class ContentCreatorGuard implements CanActivate {
 
     if (!user || !params) return false; // if no user or no post id exist then access cannot happen
 
-    // console.log(user.role, " this is rile ");
     if (user.role === 'admin') return true // if user is an admin then admin can have access if he needs to
-
     
     const userid = user.id
     const feedid = params.id
-  // console.log(userid, feedid, " this is author and feed if ");
-    
 
-  // return 
-  
-  // // let isCreator 
-  // const isAuthor = await this.creatorExist(userid, feedid)
-  // // console.log(isAuthor, " this is author ");
-
-  // if( isAuthor) return true
-  // // console.log(isAuthor, " this is  not author ooo ");
   const isCreators = await this.prismaService.feedPost.findUnique({
     where:{
       id: feedid,
@@ -68,11 +56,5 @@ export class ContentCreatorGuard implements CanActivate {
     
   }
 }
-// async function isCreator(userid:string, feedId: string) {
-
-//   if (userid ){}
-
-    
-//   }
 
 // This comparison appears to be unintentional because the types 'string' and 'Promise<string>' have no overlap

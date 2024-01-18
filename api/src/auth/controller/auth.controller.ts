@@ -1,7 +1,6 @@
 import { Body, Controller, Post } from '@nestjs/common';
 import { User } from '@prisma/client';
 import { AuthService } from '../service/auth.service';
-import { Observable, from } from 'rxjs';
 
 @Controller('auth')
 export class AuthController {
