@@ -24,7 +24,6 @@ export class UserService {
             data:{
                 imagePath
             } 
-
         })
         return user
     }
