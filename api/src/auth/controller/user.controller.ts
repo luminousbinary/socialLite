@@ -17,7 +17,7 @@ export class UserController {
     @Post('upload')
     uploadProfileImage(@UploadedFile() file: Express.Multer.File, @Request() req) {
         const fileName = file?.filename
-// does not yet prevent none mage file.
+        // does not yet prevent none mage file.
         if (!fileName) return of({ Error: "File must be png, Jpeg or jpg" })
         // console.log(file.filename);
         // const imageFilePath = join(process.cwd(), "images");

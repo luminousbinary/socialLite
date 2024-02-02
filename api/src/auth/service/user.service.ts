@@ -38,4 +38,22 @@ export class UserService {
     }
     
 
+    async checkForRequset(creator:User,
+        receiver:User) {
+            const friendReq = await this.prismaService.friendRequest.findMany({
+                where: {sentFriendRequest:receiver, receivedFriendRequest:creator}
+                
+            })
+
+            console.log(friendReq);
+            
+            return !friendReq? false : true
+
+        
+    }
+
 }
+
+//  where there s a switch map ust assign it to a variable
+
+
