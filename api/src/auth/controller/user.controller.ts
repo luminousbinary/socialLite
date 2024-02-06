@@ -33,4 +33,10 @@ export class UserController {
     }
 
 
+    @UseGuards(JwtGuard)
+    @Post('friend-request/send/:receiverId')
+    sendFrendRequestById(@Param('receiverIs') receiverId:string, @Request() req){
+        return this.userService.sendRequest(receiverId, req.user)
+    }
+ 
 }

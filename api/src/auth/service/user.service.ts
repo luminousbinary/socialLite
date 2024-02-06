@@ -5,55 +5,90 @@ import { User } from '@prisma/client';
 
 @Injectable()
 export class UserService {
-    constructor(private prismaService: PrismaService){}
+    constructor(private prismaService: PrismaService) { }
 
-    async findUserById(id: string): Promise<User>  {
+    async findUserById(userid: string): Promise<User> {
 
-        const user = await this.prismaService.user.findUnique({
-            where: { id },
-            include: { posts: true }
+        const user = await this.prismaService.user.findFirst({
+            where: { id:userid },
+            //  // may not need to include post
+            // include: { posts: true }
         })
         // delete (await user).password
         delete user.password
         return user
     }
 
-    async updateUserImageById(id: string, imagePath: object){
+    async updateUserImageById(id: string, imagePath: object) {
         const user = await this.prismaService.user.update({
-            where: {id},
-            data:{
+            where: { id },
+            data: {
                 imagePath
-            } 
+            }
         })
         return user
     }
 
-    async getUserImageById(id: string){
+    async getUserImageById(id: string) {
         const user = await this.prismaService.user.findUnique({
-            where: {id},
+            where: { id },
         })
 
         delete user.password
         return user.imagePath
     }
-    
 
-    async checkForRequset(creator:User,
-        receiver:User) {
-            const friendReq = await this.prismaService.friendRequest.findMany({
-                where: {sentFriendRequest:receiver, receivedFriendRequest:creator}
-                
-            })
 
-            console.log(friendReq);
-            
-            return !friendReq? false : true
+    async checkForRequset(creator: User,
+        receiver: User) {
+        const friendReq = await this.prismaService.friendRequest.findMany({
+            where: {
+                OR: [
+                    { sentFriendRequest: creator, receivedFriendRequest: receiver },
+                    { sentFriendRequest: receiver, receivedFriendRequest: creator }
+                ]
+            }
+        });
 
+        console.log(friendReq);
+        return friendReq.toString()==="" ? false : true
+
+    }
+
+    async sendRequest(receiverId: string, sender: User) {
+        console.log('this is sender' , sender);
+        console.log('this is receiver' , receiverId);
         
+        const receiver = await this.findUserById(receiverId)
+        console.log('ccc this s  recceiver', receiver);
+
+        // const hasRequest = await this.checkForRequset(sender, receiver)
+        if (receiver.id == sender.id) {
+            return {
+                error: 'Can not add self'
+            }
+        }
+
+        const hasRequest = await this.checkForRequset(sender, receiver)
+
+        // console.log('ccc this s  recceiver', receiver);
+        // console.log('does he have req? ', hasRequest);
+        
+        if (receiver && hasRequest == false) {
+            return this.prismaService.friendRequest.create({
+                data: {
+                    sentFriendRequestId: sender.id,
+                    receivedFriendRequestId: receiver.id,
+                    status: 'pending',
+                }
+            });
+        } else { console.log(' Request already exist'); return { error: ' request already exist' } }
+
     }
 
 }
 
 //  where there s a switch map ust assign it to a variable
+
 
 
