@@ -10,7 +10,7 @@ export class UserService {
     async findUserById(userid: string): Promise<User> {
 
         const user = await this.prismaService.user.findFirst({
-            where: { id:userid },
+            where: { id: userid },
             //  // may not need to include post
             // include: { posts: true }
         })
@@ -51,16 +51,16 @@ export class UserService {
         });
 
         console.log(friendReq);
-        return friendReq.toString()==="" ? false : true
+        return friendReq.toString() === "" ? false : true
 
     }
 
     async sendRequest(receiverId: string, sender: User) {
-        console.log('this is sender' , sender);
-        console.log('this is receiver' , receiverId);
-        
+        // console.log('this is sender', sender);
+        // console.log('this is receiver', receiverId);
+
         const receiver = await this.findUserById(receiverId)
-        console.log('ccc this s  recceiver', receiver);
+        // console.log('ccc this s  recceiver', receiver);
 
         // const hasRequest = await this.checkForRequset(sender, receiver)
         if (receiver.id == sender.id) {
@@ -73,7 +73,7 @@ export class UserService {
 
         // console.log('ccc this s  recceiver', receiver);
         // console.log('does he have req? ', hasRequest);
-        
+
         if (receiver && hasRequest == false) {
             return this.prismaService.friendRequest.create({
                 data: {
@@ -86,7 +86,41 @@ export class UserService {
 
     }
 
+
+    // // // has not been testes down wards
+    async getFriendRequestStatus(receiverId: string, user: User) {
+
+        const theReceiver = await this.findUserById(receiverId)
+        const requestSent = await this.prismaService.friendRequest.findFirst({
+            where: {
+                OR: [{ sentFriendRequest: user, receivedFriendRequest: theReceiver },
+                { sentFriendRequest: theReceiver, receivedFriendRequest: user }]
+            },
+            include: {
+                sentFriendRequest: true,
+                receivedFriendRequest: true
+            }
+
+        })
+
+        if (requestSent?.receivedFriendRequestId === user.id) {
+            return { status: 'waiting-for-current-user-response' }
+        }
+        return { status: requestSent?.status || 'not-sent' }
+    }
+
+    async getFriendRequestById (friendRequestId: string){
+        return this.prismaService.friendRequest.findUnique({
+            where:{id:friendRequestId}
+        })
+    }
+
+
+
+
 }
+
+
 
 //  where there s a switch map ust assign it to a variable
 

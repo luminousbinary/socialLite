@@ -50,6 +50,11 @@ export class FeedController {
     }
 
 
-
+    // this is to upload a n immage // 
+    @Get('image/:fileName')
+    findImageByName(@Param('fileName') fileName: string, @Request() res) {
+      if (!fileName || ['null', '[null]'].includes(fileName)) return;
+      return res.sendFile(fileName, { root: './images' });
+    }
 
 }
