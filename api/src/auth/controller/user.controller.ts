@@ -45,6 +45,10 @@ export class UserController {
         return this.userService.getFriendRequestStatus(receiverId, req.user)
     }
 
+    @UseGuards(JwtGuard)
+    @Put('friend-request/response/:receiverId')
+    respondToFriendRequest(@Param('receiverId') receiverId:string, @Request() req)
+
     
  
 }
