@@ -1,10 +1,12 @@
-import { Body, Controller, Request, Get, Param, Post, UseGuards, UseInterceptors, UploadedFile } from '@nestjs/common';
+import { Body, Controller, Request, Get, Param, Post, UseGuards, UseInterceptors, UploadedFile, Patch } from '@nestjs/common';
 import { UserService } from '../service/user.service';
 import { JwtGuard } from '../guards/jwt.guard';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { SaveImageStorage } from '../helpers/image-storage';
 import { of } from 'rxjs';
 import { join } from 'path';
+import { FriendRequest_Status } from '@prisma/client';
+import { FriendRequestDto } from '../dto/user.dto';
 
 @Controller('user')
 export class UserController {
@@ -35,20 +37,24 @@ export class UserController {
 
     @UseGuards(JwtGuard)
     @Post('friend-request/send/:receiverId')
-    sendFrendRequestById(@Param('receiverId') receiverId:string, @Request() req){
+    sendFrendRequestById(@Param('receiverId') receiverId: string, @Request() req) {
         return this.userService.sendRequest(receiverId, req.user)
     }
 
     @UseGuards(JwtGuard)
     @Get('friend-request/status/:receiverId')
-    getFriendRequestStatus(@Param('receiverId') receiverId:string, @Request() req){
+    getFriendRequestStatus(@Param('receiverId') receiverId: string, @Request() req) {
         return this.userService.getFriendRequestStatus(receiverId, req.user)
     }
 
     @UseGuards(JwtGuard)
-    @Put('friend-request/response/:receiverId')
-    respondToFriendRequest(@Param('receiverId') receiverId:string, @Request() req)
+    @Patch('friend-request/response/:friendRequesrId')
+    respondToFriendRequest(@Param('friendRequesrId') friendRequesrId: string, @Body() statusRes) {
+        // console.log(statusRes.statusRes);
+        return this.userService.respondToFriendRequest(friendRequesrId, statusRes.statusRes)
 
-    
- 
+    }
+
+
+
 }

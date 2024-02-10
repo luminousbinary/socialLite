@@ -91,7 +91,7 @@ enum Role {
 enum FriendRequest_Status {
   not_sent
   pending
-  ccepted
-  eclined
+  accepted
+  declined
   waiting_for_current_user_response
 }

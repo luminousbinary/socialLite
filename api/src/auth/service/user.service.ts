@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { User } from '@prisma/client';
+import { FriendRequest_Status, User } from '@prisma/client';
 
 @Injectable()
 export class UserService {
@@ -109,13 +109,33 @@ export class UserService {
         return { status: requestSent?.status || 'not-sent' }
     }
 
-    async getFriendRequestById (friendRequestId: string){
-        return this.prismaService.friendRequest.findUnique({
-            where:{id:friendRequestId}
+    async getFriendRequestById(friendRequestId: string) {
+        return await this.prismaService.friendRequest.findUnique({
+            where: { id: friendRequestId }
         })
     }
 
 
+    async respondToFriendRequest(friendRequesrId: string, statusResponse: FriendRequest_Status) {
+
+        return this.getFriendRequestById(friendRequesrId).then((theFriendRequest) => {
+
+            // // // this is to check if the promis works well
+            // console.log(theFriendRequest, "this is the promis request");
+
+            // console.log(
+            //     "tjis is status response", statusResponse);
+
+            return this.prismaService.friendRequest.update({
+                where: { id: theFriendRequest.id },
+                data: { status: statusResponse }
+            })
+        }).catch((err) => {
+            console.log("there was an error");
+            return (console.log(err)
+                , { error: "there is an error" })
+        })
+    }
 
 
 }
