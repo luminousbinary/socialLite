@@ -15,7 +15,7 @@ Users can:
 <li>View A post</li>
 <li>Delete their post</li>
 <li>Update their post</li>
-<li>Send a friend request</li>
+<li>Send a friend request & acept friend request</li>
 
 </ul>
 <!-- <p></p> -->
