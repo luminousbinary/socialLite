@@ -16,7 +16,7 @@ Users can:
 <li>Delete their post</li>
 <li>Update their post</li>
 <li>Send a friend request & acept friend request</li>
-
+<li>send connection and accept connection</li>
 </ul>
 <!-- <p></p> -->
 
