@@ -18,6 +18,7 @@ Users can:
 <li>Send a friend request & acept friend request</li>
 <li>send connection and accept connection</li>
 ... and more
+
 </ul>
 <!-- <p></p> -->
 
